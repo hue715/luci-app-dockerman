@@ -26,6 +26,11 @@ function index()
 		if not host or not port then
 			return
 		end
+	else
+		local socket = luci.model.uci.cursor():get("dockerd", "globals", "socket_path")
+		if socket and not nixio.fs.access(socket) then
+			return
+		end
 	end
 
 	if (require "luci.model.docker").new():_ping().code ~= 200 then
